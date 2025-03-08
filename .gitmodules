@@ -1,0 +1,3 @@
+[submodule "tage-predictor"]
+	path = tage-predictor
+	url = https://github.com/pycaliper/tage-predictor.git

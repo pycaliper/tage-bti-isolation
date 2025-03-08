@@ -1,0 +1,8 @@
+{
+    "jasper" : {
+        "jdir"      : "mydesigns/tage",
+        "script"    : "tage.tcl",
+        "pycfile"   : "tage.pyc.sv",
+        "context"   : "<embedded>::miter"
+    }
+}
