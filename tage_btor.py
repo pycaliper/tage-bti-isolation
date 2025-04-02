@@ -6,7 +6,7 @@ from pycaliper.pycconfig import DesignConfig
 from pycaliper.proofmanager import mk_btordesign
 from pycaliper.verif.btorverifier import BTORVerifier1Trace
 
-from myspecs.tage import boundary_spec, tage_config
+from tage import boundary_spec, tage_config
 
 # Log to a debug file with overwriting
 logging.basicConfig(filename="debug.log", level=logging.DEBUG, filemode="w")

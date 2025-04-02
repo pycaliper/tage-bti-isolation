@@ -1,4 +1,5 @@
-
+def template(bht_width, tage_width):
+    return f"""
 set banner "========== New session =========="
 puts $banner
 
@@ -25,30 +26,35 @@ set_message -disable VERI-1995 ; # unique/priority if/case is not full
                                  # (we check these conditions with the elaborate
                                  #  option -extract_case_assertions)
 
-set JASPER_FILES {
+set JASPER_FILES {{
     two_trace.sv
-}
+}}
 
 set env(DESIGN_HOME) [pwd]
-set err_status [catch {analyze -sv12 +define+INVARIANTS +define+JASPER +define+SYNTHESIS +define+PARAMV +define+BHT_IDX_WIDTH=6  +define+TAGE_IDX_WIDTH=4 +libext+.v+.sv+.vh+.svh+ -f design.lst {*}$JASPER_FILES} err_msg]
-if $err_status {error $err_msg}
+set err_status [catch {{analyze -sv12 +define+INVARIANTS +define+JASPER +define+SYNTHESIS +define+PARAMV +define+BHT_IDX_WIDTH={bht_width} +define+TAGE_IDX_WIDTH={tage_width} +libext+.v+.sv+.vh+.svh+ -f design.lst {{*}}$JASPER_FILES}} err_msg]
+if $err_status {{error $err_msg}}
 
-elaborate     -top miter     -no_preconditions     -extract_case_assertions     -disable_auto_bbox
+elaborate \
+    -top miter \
+    -no_preconditions \
+    -extract_case_assertions \
+    -disable_auto_bbox
 
-# -bbox_a bht_data 
-proc write_reset_seq {file} {
+# -bbox_a bht_data \
+
+proc write_reset_seq {{file}} {{
     puts $file "fvreset 1'b1"
     puts $file 1
     puts $file "fvreset 1'b0"
-    puts $file {$}
+    puts $file {{$}}
     close $file
-}
+}}
 
-proc reset_formal {} {
+proc reset_formal {{}} {{
     write_reset_seq  [open "reset.rseq" w]
     # reset -expression fvreset
     reset -sequence "reset.rseq"
-}
+}}
 
 
 clock clk
@@ -59,16 +65,17 @@ clock -rate -default clk
 reset_formal
 
 # Set default Jasper proof engines (overrides use_nb engine settings)
-#set_engine_mode {Ht Hp B K I N D AG AM Tri}
-set_engine_mode {Ht}
+#set_engine_mode {{Ht Hp B K I N D AG AM Tri}}
+set_engine_mode {{Ht}}
 
 set_max_trace_length 3
 
 # Adds $prefix to each string in $list
-proc map_prefix {prefix list} {
-    set out {}
-    foreach s $list {
-        lappend out "${prefix}${s}"
-    }
+proc map_prefix {{prefix list}} {{
+    set out {{}}
+    foreach s $list {{
+        lappend out "${{prefix}}${{s}}"
+    }}
     return $out
-}
+}}
+"""
